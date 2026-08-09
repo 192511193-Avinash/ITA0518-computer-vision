@@ -1,0 +1,52 @@
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow # Import cv2_imshow
+
+# Load the image
+image_path = '/Screenshot 2026-08-09 202635.png'
+img = cv2.imread(image_path)
+
+if img is None:
+    print(f"Error: Could not load image from {image_path}. Please check the path and file integrity.")
+else:
+    # Resize the image to 500x500 to match the original example's dimensions
+    # This ensures the homography points remain relevant
+    img = cv2.resize(img, (500, 500))
+
+    # The original drawing operations were on a blank canvas, 
+    # but we can still draw on the loaded image if desired. 
+    # For now, let's just apply the homography directly to the image.
+    
+    # Draw circles at the corners for visualization of source points (optional)
+    # cv2.circle(img, (100, 100), 8, (0, 0, 255), -1)
+    # cv2.circle(img, (400, 100), 8, (0, 255, 0), -1)
+    # cv2.circle(img, (100, 400), 8, (255, 0, 0), -1)
+    # cv2.circle(img, (400, 400), 8, (0, 255, 255), -1)
+
+    # Source points
+    src_pts = np.float32([
+        [100, 100],
+        [400, 100],
+        [100, 400],
+        [400, 400]
+    ])
+
+    # Destination points
+    dst_pts = np.float32([
+        [50, 50],
+        [450, 100],
+        [100, 450],
+        [420, 400]
+    ])
+
+    # Compute Homography Matrix
+    H, status = cv2.findHomography(src_pts, dst_pts)
+
+    # Apply Homography
+    output = cv2.warpPerspective(img, H, (500, 500))
+
+    # Display using cv2_imshow
+    cv2_imshow(img)
+    cv2_imshow(output)
+
+# cv2.waitKey(0) and cv2.destroyAllWindows() are not needed with cv2_imshow in Colab
