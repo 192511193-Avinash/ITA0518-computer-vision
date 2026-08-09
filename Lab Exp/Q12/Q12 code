@@ -1,0 +1,33 @@
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow
+
+# Read the user's car image
+img = cv2.imread('/content/Screenshot 2026-08-09 202635.png')
+
+if img is None:
+    print("Error: Could not load image. Check the file path and ensure the image exists.")
+else:
+    rows, cols = img.shape[:2]
+
+    # Source points
+    pts1 = np.float32([[50, 50],
+                       [400, 50],
+                       [50, 400],
+                       [400, 400]])
+
+    # Destination points
+    pts2 = np.float32([[0, 0],
+                       [350, 30],
+                       [30, 400],
+                       [400, 400]])
+
+    # Perspective transformation
+    M = cv2.getPerspectiveTransform(pts1, pts2)
+    result = cv2.warpPerspective(img, M, (cols, rows))
+
+    print("Original Image")
+    cv2_imshow(img)
+
+    print("Perspective Transformed Image")
+    cv2_imshow(result)
