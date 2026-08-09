@@ -1,0 +1,38 @@
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow
+
+# Read the user's car image
+img = cv2.imread('/content/Screenshot 2026-08-09 202635.png')
+
+if img is None:
+    print("Error: Could not load image. Check the file path and ensure the image exists.")
+else:
+    # Define 3 points in the original image
+    pts1 = np.float32([[50, 50],
+                       [200, 50],
+                       [50, 200]])
+
+    # Define their new positions
+    pts2 = np.float32([[10, 100],
+                       [200, 50],
+                       [100, 250]])
+
+    # Create the affine transformation matrix
+    matrix = cv2.getAffineTransform(pts1, pts2)
+
+    # Apply affine transformation
+    rows, cols = img.shape[:2]
+    affine_img = cv2.warpAffine(img, matrix, (cols, rows))
+
+    # Display images
+    print("Original Image")
+    cv2_imshow(img)
+
+    print("Affine Transformed Image")
+    cv2_imshow(affine_img)
+
+    # Save the output image
+    cv2.imwrite("affine_transformed.jpg", affine_img)
+
+    print("Affine Transformation Completed.")
