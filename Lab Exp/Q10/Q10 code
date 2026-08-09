@@ -1,0 +1,33 @@
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow
+
+# Read the image (using the user's uploaded image)
+img = cv2.imread('/content/Screenshot 2026-08-09 202635.png')
+
+if img is None:
+    print("Error: Could not load image. Check the file path and ensure the image exists.")
+else:
+    # Get image dimensions
+    rows, cols = img.shape[:2]
+
+    # Translation values
+    tx = 100   # Move 100 pixels to the right
+    ty = 50    # Move 50 pixels down
+
+    # Translation matrix
+    M = np.float32([[1, 0, tx],
+                    [0, 1, ty]])
+
+    # Perform image translation
+    translated = cv2.warpAffine(img, M, (cols, rows))
+
+    # Display images
+    print("Original Image")
+    cv2_imshow(img)
+
+    print("Translated Image")
+    cv2_imshow(translated)
+
+    # Save the output image
+    cv2.imwrite("translated_image.jpg", translated)
