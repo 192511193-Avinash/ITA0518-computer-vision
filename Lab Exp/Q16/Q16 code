@@ -1,0 +1,21 @@
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow
+
+# Read the uploaded image
+img = cv2.imread('image1.jpg', 0)
+
+if img is not None:
+    # Perform Canny edge detection
+    edges = cv2.Canny(img, 100, 200)
+    
+    # Save the result
+    cv2.imwrite('Edges.jpg', edges)
+    
+    # Display the original and the edges
+    print("Original Image:")
+    cv2_imshow(cv2.imread('image1.jpg'))
+    print("\nEdge Detected Image:")
+    cv2_imshow(edges)
+else:
+    print("Error: Could not read the uploaded image.")
