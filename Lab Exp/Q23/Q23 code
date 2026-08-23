@@ -1,0 +1,31 @@
+from PIL import Image, ImageFilter
+from IPython.display import display
+
+# Load the image from the Colab environment
+image_path = "image1.jpg"
+
+try:
+    im1 = Image.open(image_path)
+    
+    # Apply Unsharp Masking
+    # radius: specifies the size of the blurring filter
+    # percent: specifies the strength of the sharpening
+    # threshold: controls the minimum brightness change to be sharpened
+    im2 = im1.filter(ImageFilter.UnsharpMask(radius=3, percent=200, threshold=5))
+    
+    # Display the results
+    print("Original Image:")
+    display(im1)
+    print("\nSharpened Image (Unsharp Masking):")
+    display(im2)
+    
+    # Convert to RGB mode before saving as JPEG to avoid OSError
+    if im2.mode in ("RGBA", "P"):
+        im2 = im2.convert("RGB")
+    
+    # Save the result
+    im2.save('Unsharp_Masked_Image.jpg')
+    print("\nSuccess: Image saved as Unsharp_Masked_Image.jpg")
+
+except FileNotFoundError:
+    print(f"Error: '{image_path}' not found. Please ensure the image is uploaded to the /content/ folder.")
