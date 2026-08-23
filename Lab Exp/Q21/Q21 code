@@ -1,0 +1,26 @@
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow
+
+# Load the image from the Colab environment
+img = cv2.imread('image1.jpg')
+
+if img is not None:
+    # Laplacian mask with diagonal neighbors extension
+    # The center is -8 to account for all 8 surrounding neighbors (4 sides + 4 diagonals)
+    kernel = np.array([[1, 1, 1], 
+                       [1, -8, 1], 
+                       [1, 1, 1]])
+    
+    # Apply the filter to extract details
+    details = cv2.filter2D(img, -1, kernel)
+    
+    # Sharpen by subtracting the Laplacian (details) from the original
+    sharpened = cv2.subtract(img, details)
+    
+    # Save and display
+    cv2.imwrite('Sharpened_Image_Diagonal.jpg', sharpened)
+    print("Sharpened Image (Laplacian with Diagonal Extension):")
+    cv2_imshow(sharpened)
+else:
+    print("Error: 'image1.jpg' not found. Please ensure the image is uploaded.")
