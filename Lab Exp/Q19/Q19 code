@@ -1,0 +1,23 @@
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow
+
+# Using the image already available in Colab
+img = cv2.imread('image1.jpg', 0)
+
+if img is not None:
+    # Calculate Sobel gradients
+    sobelx = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=3)
+    sobely = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=3)
+    
+    # Combine gradients and convert to uint8
+    abs_sobelx = cv2.convertScaleAbs(sobelx)
+    abs_sobely = cv2.convertScaleAbs(sobely)
+    edges = cv2.addWeighted(abs_sobelx, 0.5, abs_sobely, 0.5, 0)
+    
+    # Save and display
+    cv2.imwrite('Edge_detection.jpg', edges)
+    print("Combined Sobel Edge Detection:")
+    cv2_imshow(edges)
+else:
+    print("Error: 'image1.jpg' not found. Please ensure the file is uploaded to Colab.")
