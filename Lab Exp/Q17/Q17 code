@@ -1,0 +1,17 @@
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow
+
+# Using the image already uploaded to Colab
+img = cv2.imread('image1.jpg', 0)
+
+if img is not None:
+    # Apply Sobel edge detection
+    sobel_x = cv2.Sobel(img, cv2.CV_8U, 1, 0, ksize=5)
+    
+    # Save and display the result
+    cv2.imwrite('sobel_x.jpg', sobel_x)
+    print("Sobel X Result:")
+    cv2_imshow(sobel_x)
+else:
+    print("Error: 'image1.jpg' not found. Please upload it again if it was deleted.")
