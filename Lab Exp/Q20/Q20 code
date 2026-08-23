@@ -1,0 +1,32 @@
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow
+
+# Load the image
+img = cv2.imread('image1.jpg')
+
+if img is not None:
+    # Laplacian mask with negative center coefficient
+    # This kernel detects edges/details: [[0, 1, 0], [1, -4, 1], [0, 1, 0]]
+    # To sharpen, we subtract the Laplacian from the original: Original - Laplacian
+    # Which is equivalent to applying a kernel like: [[0, -1, 0], [-1, 5, -1], [0, -1, 0]]
+    
+    laplacian_kernel = np.array([[0, 1, 0], 
+                                 [1, -4, 1], 
+                                 [0, 1, 0]], dtype=np.float32)
+    
+    # Calculate the details (Laplacian)
+    details = cv2.filter2D(img, -1, laplacian_kernel)
+    
+    # Sharpen by subtracting the Laplacian (negative center mask) from the original
+    # Since the center is -4, subtracting it effectively boosts the center relative to neighbors
+    sharpened = cv2.subtract(img, details)
+    
+    # Save and display results
+    cv2.imwrite('laplacian_sharpened.jpg', sharpened)
+    print("Original Image:")
+    cv2_imshow(img)
+    print("\nSharpened Image (Laplacian with Negative Center Mask):")
+    cv2_imshow(sharpened)
+else:
+    print("Error: 'image1.jpg' not found.")
