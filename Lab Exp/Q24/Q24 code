@@ -1,0 +1,38 @@
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow
+
+def high_boost_filter(image, k):
+    # Convert to float for precise calculations
+    img_float = image.astype(np.float32)
+    
+    # 1. Blur the image using a Gaussian filter
+    blurred = cv2.GaussianBlur(img_float, (3, 3), 0)
+    
+    # 2. Create the mask (Unsharp Mask): Original - Blurred
+    mask = img_float - blurred
+    
+    # 3. High-Boost filtering: Original + k * Mask
+    # If k=1, it is unsharp masking. If k > 1, it is high-boost filtering.
+    boosted = img_float + k * mask
+    
+    # Clip and convert back to uint8
+    return np.clip(boosted, 0, 255).astype(np.uint8)
+
+# Load the image from the Colab environment
+image_path = "image1.jpg"
+image = cv2.imread(image_path)
+
+if image is not None:
+    # Apply high-boost filter with a boost factor (e.g., k=1.5)
+    sharpened_image = high_boost_filter(image, 1.5)
+    
+    # Display and Save
+    print("Original Image:")
+    cv2_imshow(image)
+    print("\nSharpened Image (High-Boost Filtering, k=1.5):")
+    cv2_imshow(sharpened_image)
+    
+    cv2.imwrite('high_boost_sharpened.jpg', sharpened_image)
+else:
+    print(f"Error: '{image_path}' not found. Please ensure the image is uploaded.")
