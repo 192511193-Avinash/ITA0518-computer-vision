@@ -1,0 +1,17 @@
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow
+
+# Using the image already available in Colab
+img = cv2.imread('image1.jpg', 0)
+
+if img is not None:
+    # Apply Sobel Y edge detection
+    sobel_y = cv2.Sobel(img, cv2.CV_8U, 0, 1, ksize=5)
+    
+    # Save and display the result
+    cv2.imwrite('sobel_y.jpg', sobel_y)
+    print("Sobel Y Result:")
+    cv2_imshow(sobel_y)
+else:
+    print("Error: 'image1.jpg' not found. Please upload the image file to Colab.")
