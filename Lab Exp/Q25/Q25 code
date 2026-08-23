@@ -1,0 +1,37 @@
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow
+
+# Load the image from Colab environment
+image_path = "image1.jpg"
+image = cv2.imread(image_path)
+
+if image is not None:
+    # Convert to grayscale
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    
+    # 1. Calculate gradients using Sobel operators
+    grad_x = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=3)
+    grad_y = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=3)
+    
+    # 2. Calculate the magnitude of the gradient (Gradient Mask)
+    abs_grad_x = cv2.convertScaleAbs(grad_x)
+    abs_grad_y = cv2.convertScaleAbs(grad_y)
+    gradient_mask = cv2.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
+    
+    # 3. Sharpening: Original + Gradient Mask
+    # We add the edges back to the original image
+    sharpened = cv2.add(gray, gradient_mask)
+    
+    # Display results
+    print("Original Grayscale:")
+    cv2_imshow(gray)
+    print("\nGradient Mask (Edges):")
+    cv2_imshow(gradient_mask)
+    print("\nSharpened Image (Gradient Masking):")
+    cv2_imshow(sharpened)
+    
+    # Save the result
+    cv2.imwrite('gradient_sharpened.jpg', sharpened)
+else:
+    print(f"Error: '{image_path}' not found. Please ensure the image is uploaded.")
