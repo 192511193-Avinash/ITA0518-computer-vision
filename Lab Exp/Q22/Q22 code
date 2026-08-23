@@ -1,0 +1,28 @@
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow
+
+# Load the image from the Colab environment
+image = cv2.imread('image1.jpg')
+
+if image is not None:
+    # Laplacian mask with a POSITIVE center coefficient for sharpening
+    # This kernel effectively performs: Original + (Original - Smoothed)
+    # Common 3x3 sharpening kernel with positive center:
+    kernel = np.array([[0, -1, 0],
+                       [-1, 5, -1],
+                       [0, -1, 0]])
+    
+    # Apply the filter directly to get the sharpened image
+    sharpened = cv2.filter2D(image, -1, kernel)
+    
+    # Display results
+    print("Original Image:")
+    cv2_imshow(image)
+    print("\nSharpened Image (Positive Center Laplacian Mask):")
+    cv2_imshow(sharpened)
+    
+    # Save the result
+    cv2.imwrite('Sharpened_Positive_Center.jpg', sharpened)
+else:
+    print("Error: 'image1.jpg' not found. Please ensure the image is uploaded to the /content/ directory.")
